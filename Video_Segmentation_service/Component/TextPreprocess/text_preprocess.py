@@ -46,7 +46,8 @@ class Text_preprocess:
             with open(TRANSCRIPT_PATH , "r") as f:
                 self.text = f.read()
         except Exception as e:
-            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
                 "code": 500,
@@ -56,7 +57,6 @@ class Text_preprocess:
     
     def keyword_extraction(self):
         try:
-            self.debug = Logger()
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "keyword_extraction started.")
             keys = []
             self.rake.extract_keywords_from_text(self.text)
@@ -79,11 +79,13 @@ class Text_preprocess:
             filePathToKeyWord = os.path.join(KEY_WORD_FILE_PATH, self.lec_name + "_" + self.lec_id + "_keywordList" +".txt") # SAVNING PATH FOR EXTRACTED TOPICS LIST FILE
             file1 = open(filePathToKeyWord, "w")
             file1.write(str(key_word))
+            file1.close()
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Saved extracted key file in path: " + filePathToKeyWord + ".")
             return filePathToKeyWord # SAVED FILE PATH
 
         except Exception as e:
-            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
                 "code": 500,
@@ -92,7 +94,6 @@ class Text_preprocess:
 
     def train_lda_model(self):
         try:
-            self.debug = Logger()
             corpus, id2word = self.text_normalization() # PREPROCESS TEXT
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization complete for LDA model.")
             lda_model = LdaMulticore(corpus = corpus,
@@ -110,7 +111,8 @@ class Text_preprocess:
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "LDA topics extraction complete.")
 
         except Exception as e:
-            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
                 "code": 500,
@@ -119,7 +121,6 @@ class Text_preprocess:
 
     def lda_topic_preprocess(self):
         try:
-            self.debug = Logger()
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "LDA topic preprocess started...")
             joined_text = " ".join(self.lda_topics)
             lda_topics_list = [joined_text]
@@ -153,11 +154,13 @@ class Text_preprocess:
             filePathToKeyWord = os.path.join(LDA_TOPIC_FILE_PATH, self.lec_name + "_LDA_keywordList" + ".txt") # PATH TO SAVE THE EXTRACTED LDA TOPIC LIST
             file1 = open(filePathToKeyWord, "w")
             file1.write(str(lda_topics))
+            file1.close()
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Saved extracted lda topics to file: " + filePathToKeyWord + ".")
             return filePathToKeyWord
 
         except Exception as e:
-            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
                 "code": 500,
@@ -166,7 +169,6 @@ class Text_preprocess:
 
     def text_normalization(self):
         try:
-            self.debug = Logger()
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization preprocess started...")
             sentences = sent_tokenize(self.text)
             data_words = list(self.sent_to_words(sentences))
@@ -176,8 +178,7 @@ class Text_preprocess:
             trigram_mod = Phraser(trigram) # SENTENCE CLUBBED(FASTER METHOD)
 
             stop_words = stopwords.words('english')
-            stop_words.extend(['Welcome', 'week', '\n\n', 'Okay', 'use', 'get', 'got', 'take', 'taken', 'took', 'taking', 'put', 'putting',
-                            'use', 'person'])
+            stop_words.extend(['Welcome', 'week', '\n\n', 'Okay', 'use', 'get', 'got', 'take', 'taken', 'took', 'taking', 'put', 'putting', 'use', 'person'])
             data_words_nostops = [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in data_words] # REMOVE STOP WORDS
             data_words_bigrams = [trigram_mod[bigram_mod[doc]] for doc in data_words_nostops] # FORM BIGRAM
 
@@ -193,7 +194,8 @@ class Text_preprocess:
             return corpus, id2word
 
         except Exception as e:
-            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
                 "code": 500,

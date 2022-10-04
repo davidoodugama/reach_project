@@ -13,7 +13,8 @@ from Const.const import (AUDIO_SEGMENTATION_LOG_FILE, TEXT_PREPROCESS_LOG_FILE, 
                         TEXT_PREPROCESS, AUDIO_SEGMENTATION_ERROR_LOG_FILE, TEXT_PREPROCESS_ERROR_LOG_FILE, VIDEO_SEGMENTATION_ERROR_LOG_FILE,
                         MAIN_LOG_FILE, MAIN_ERROR_LOG_FILE, MAIN, BACK_GROUND_FILE_PROCESS_LOG_FILE, BACK_GROUND_FILE_PROCESS_ERROR_LOG_FILE, BACKGROUND_PROCESS,
                         EMAIL, EMAIL_LOG_FILE, EMAIL_ERROR_LOG_FILE, S3_LOG_FILE, S3_ERROR_LOG_FILE, S3, RDS, RDS_LOG_FILE, RDS_ERROR_LOG_FILE, LOG_FOLDER, LOG_PATH_FOLDER,
-                        USE_OWN_LOGS, ERROR_LOG_PATH_FOLDER)
+                        USE_OWN_LOGS, ERROR_LOG_PATH_FOLDER, AZURE_DB, AZURE_MYSQL_ERROR_LOG_FILE, AZURE_MYSQL_LOG_FILE, AZURE_BLOB, AZURE_BLOB_LOG_FILE,
+                        AZURE_BLOB_ERROR_LOG_FILE, USER, USER_ERROR_LOG_FILE, USER_LOG_FILE)
 
 class Logger():
     def __init__(self):
@@ -49,8 +50,15 @@ class Logger():
             self.file_handler_debug = logging.FileHandler(EMAIL_LOG_FILE) # EMAIL LOG FILE
         elif name == S3:
             self.file_handler_debug = logging.FileHandler(S3_LOG_FILE) # AWS S3 LOG FILE
+        elif name == AZURE_BLOB:
+            self.file_handler_debug = logging.FileHandler(AZURE_BLOB_LOG_FILE) # AZURE BLOB LOG FILE
         elif name == RDS:
             self.file_handler_debug = logging.FileHandler(RDS_LOG_FILE) # AWS RDS LOG FILE
+        elif name == AZURE_DB:
+            self.file_handler_debug = logging.FileHandler(AZURE_MYSQL_LOG_FILE)  # AZURE MYSQL LOG FILE
+        elif name == USER:
+            self.file_handler_debug = logging.FileHandler(USER_LOG_FILE) # USER LOG FILE
+        
 
         self.file_handler_debug.setFormatter(self.formatter)
         if (self.logger.hasHandlers()):
@@ -77,8 +85,14 @@ class Logger():
             self.file_handler_error = logging.FileHandler(EMAIL_ERROR_LOG_FILE) # EMAIL ERROR LOG FILE
         elif name == S3:
             self.file_handler_error = logging.FileHandler(S3_ERROR_LOG_FILE) # AWS S3 ERROR LOG FILE
+        elif name == AZURE_BLOB:
+            self.file_handler_error = logging.FileHandler(AZURE_BLOB_ERROR_LOG_FILE) # AZURE BLOB ERROR LOG FILE
         elif name == RDS:
             self.file_handler_error = logging.FileHandler(RDS_ERROR_LOG_FILE) # AWS RDS ERROR LOG FILE
+        elif name == AZURE_DB:
+            self.file_handler_error = logging.FileHandler(AZURE_MYSQL_ERROR_LOG_FILE)  # AZURE MYSQL ERROR LOG FILE
+        elif name == USER:
+            self.file_handler_error = logging.FileHandler(USER_ERROR_LOG_FILE) # USER ERROR LOG FILE
 
         self.file_handler_error.setFormatter(self.formatter)
         if (self.error_logger.hasHandlers()):

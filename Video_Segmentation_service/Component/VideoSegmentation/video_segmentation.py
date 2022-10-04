@@ -17,7 +17,8 @@ from Config.Logger.Logger import Logger
 from moviepy.editor import VideoFileClip
 import os
 import ast
-from Config.S3_Config.S3_Config import S3_Config
+from flask import jsonify
+# from Config.S3_Config.S3_Config import S3_Config
 from Const.const import FPS, CHANGED_FPS_VIDEO_SAVING_PATH, VIDEO, VIDEO_SEGMENTATION_LOG, MP4_FORMAT, SEGMENT_FOLDER, VIDEO_SEGMENTATION_ERROR_LOG, CODEC, SEGMENT
 
 """
@@ -33,7 +34,7 @@ class VideoSegmentation:
     def __init__(self, lda_topic_list, key_token, lec_name, lec_id, video_file_path, subject_name):
         try:
             self.debug = Logger()
-            self.s3 = S3_Config(lec_id, lec_name, subject_name)
+            # self.s3 = S3_Config(lec_id, lec_name, subject_name)
             self.reader = easyocr.Reader(['en'], gpu = True)
             self.lemmatizer = WordNetLemmatizer()
             self.stopwords = stopwords.words('english')
@@ -92,9 +93,15 @@ class VideoSegmentation:
             
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
 
     """
     # THIS FUNCTION IS USED TO IDENTIFY THE TOPIC IN THE IMAGE FRAME
@@ -115,9 +122,15 @@ class VideoSegmentation:
             return name
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
     
     """
     THIS FUNCTION IS USED TO IDENTIFY THE SEGMENT BOUNDERY TIME
@@ -153,9 +166,15 @@ class VideoSegmentation:
                     pass
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
 
     """
     THIS FUNCTION IS USED TO CALCULATE THE SIMILARITY SCORE BETWEEN 2 EXTRACTED FRAMES
@@ -176,9 +195,15 @@ class VideoSegmentation:
                 return None
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
     
     """
     THIS FUNCTION IS USED TO PREPROCESS THE EXTRACTED FRAME FROM THE VIDEO
@@ -193,9 +218,15 @@ class VideoSegmentation:
             return mask
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
     
     """
     THIS FUNCTION IS USED TO MESSURE THE SIMILARITY AND RETURN WHETHER THE 2 FRAMES ARE SIMILARY OR NOT
@@ -210,9 +241,15 @@ class VideoSegmentation:
                 return False
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
     
     """
     THIS FUNCTION IS USED TO DECREASE THE FPS OF THE VIDEO INORDER TO MAKE THE READING FASTER
@@ -225,12 +262,17 @@ class VideoSegmentation:
             new_clip.write_videofile(self.full_fps_changed_video_file_path + "/" + self.changed_fps_video_name)
             self.fps_changed_video_path = self.full_fps_changed_video_file_path + "/" + self.changed_fps_video_name
             self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, "change_fps_of_video|FPS changed in video " + self.cleaned_video_file_path + " to " + self.fps_changed_video_path)
-            new_clip.close()
+            clip.close()
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
 
     def extract_videoFrame(self):
         try:
@@ -281,9 +323,15 @@ class VideoSegmentation:
             return True
         
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
 
     def segment_video(self):
         try:
@@ -296,11 +344,16 @@ class VideoSegmentation:
                 self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG,"segment_video| " + self.lecture_segmentation_folder_path + "/" + i["topic"] + MP4_FORMAT + " file saved complete")
                 
             # UPLOAD SEGMENTS TO S3
-            self.s3.upload_video(
-                self.lecture_segmentation_folder_path + "/", SEGMENT)
+            # self.s3.upload_video(self.lecture_segmentation_folder_path + "/", SEGMENT)
             return self.lecture_segmentation_folder_path, self.remove_segment_folder_path
                 
         except Exception as e:
-            self.debug = Logger()
-            self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
-            return False
+            # self.debug = Logger()
+            # self.debug.error_log(VIDEO_SEGMENTATION_ERROR_LOG, e, VIDEO)
+            # return False
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG, e)
+            return jsonify({
+                "error": 1,
+                "code": 500,
+                "error" : "{0}".format(e)
+                })
