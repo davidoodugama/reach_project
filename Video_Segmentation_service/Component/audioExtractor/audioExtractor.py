@@ -69,7 +69,7 @@ class Audio_extractor:
             self.video_audio_extract_path = MAIN_UPLOAD_FOLDER + self.main_path + AUDIO_UPLOAD_PATH + self.main_path + AUDIO_FORMAT # SAVING PATH FOR EXTRACTED AUDIO FILES FROM VIDEO
         except Exception as e:
             self.debug = Logger()
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,
@@ -101,7 +101,7 @@ class Audio_extractor:
             return self.path + "/"  + self.filename, self.lec_id
 
         except Exception as e:
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO) # AUDIO_SEGMENTATION_ERROR_LOG
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO) # AUDIO_SEGMENTATION_ERROR_LOG
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,
@@ -123,7 +123,7 @@ class Audio_extractor:
             self.filename = out_file_name
 
         except Exception as e:
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,
@@ -156,13 +156,13 @@ class Audio_extractor:
             videoclip.close()
             if res:
                 clean_audio_video_file_path = self.add_audio_to_video()
-                self.blob.upload_video(clean_audio_video_file_path, ORIGINAL)
+                # self.blob.upload_video(clean_audio_video_file_path, ORIGINAL)
                 self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, "Cleaned video uploaded to s3.")
             
             return MAIN_UPLOAD_FOLDER + self.main_path, clean_audio_video_file_path
 
         except Exception as e:
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,
@@ -198,7 +198,7 @@ class Audio_extractor:
             return True
 
         except Exception as e:
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,
@@ -225,7 +225,7 @@ class Audio_extractor:
             return clean_audio_video_file_path
 
         except Exception as e:
-            # self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
+            self.debug.error_log(AUDIO_SEGMENTATION_ERROR_LOG, e, AUDIO)
             self.debug.debug(AUDIO, AUDIO_SEGMENTATION_LOG, e)
             return jsonify({
                 "error": 1,

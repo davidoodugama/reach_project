@@ -99,14 +99,21 @@ class Blob_config:
                 return file_url
 
             elif type == SEGMENT:
+                self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, "paths: ")
+                self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, os.listdir(path))
                 for path in os.listdir(path):
-                    file_name = os.path.basename(path)  
+                    path = secure_filename(path)
+                    path = "segments/" + self.subject_name + "/" + lec_id + "_" + self.lec_name + "/" + path
+                    self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, "path :" + str(path))
+                    
+                    file_name = os.path.basename(path) 
+                    self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, "fileName : " + str(file_name)) 
+                    
                     file_url = self.blob_upload(path, type)
                     sql = """INSERT INTO video_segmentation(lec_id, topic_name, file_url) values({}, '{}', '{}')""".format(lec_id, file_name, file_url)
                     self.db.insert(sql)
 
-                    self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, "upload_video|Video file name: " +
-                                     file_name + " uploaded to S3. Full file path: " + file_url)
+                    self.debug.debug(AZURE_BLOB, AZURE_BLOB_LOG, "upload_video|Video file name: " + file_name + " uploaded to AZURE BLOB. Full file path: " + file_url)
 
         except Exception as e:
             self.debug.error_log(AZURE_BLOB_ERROR_LOG_FILE, e, AZURE_BLOB)
@@ -133,7 +140,7 @@ class Blob_config:
             with open(path,'rb') as local_file:
                 file_client.upload_data(data=local_file, overwrite=True, length=local_size)
             
-            return FILE_URL + self.blob_main_video_directory + "/" + type
+            return FILE_URL + self.blob_main_video_directory + "/" + type + "/" + file_name
 
         except Exception as e:
             self.debug.error_log(AZURE_BLOB_ERROR_LOG_FILE, e, AZURE_BLOB)

@@ -69,6 +69,7 @@ def upload_video(lec_name, subject_name, video_file_path, type, lec_id = None):
     try:
         logger.debug(BACKGROUND_PROCESS, BACK_GROUND_FILE_PROCESS_LOG, "upload_video|in progress")
         blob = Blob_config(lec_name, subject_name)
+        logger.debug(BACKGROUND_PROCESS, BACK_GROUND_FILE_PROCESS_LOG, video_file_path)
         blob_file_url = blob.upload_video(video_file_path, type, lec_id) # UPLOADING ORIGINAL FILE TO S3 
         logger.debug(BACKGROUND_PROCESS, BACK_GROUND_FILE_PROCESS_LOG, "upload_video|finished")
         return blob_file_url
@@ -115,8 +116,9 @@ def main():
         # keyword_file_path = "topics_files/Key_words/MOLM_1_keywordList.txt"
         # clean_audio_video_file_path = "uploads\MOLM_1\Cleaned_audio_with_video\cleaned_Eduscope.mp4"
         lecture_segmentation_folder_path, remove_segment_folder_path = videoSegmentation(lda_file_path, keyword_file_path, lec_name, lec_id, clean_audio_video_file_path, subject_name)
+        logger.debug(BACKGROUND_PROCESS, BACK_GROUND_FILE_PROCESS_LOG, "main|" + lecture_segmentation_folder_path)
         logger.debug(BACKGROUND_PROCESS, BACK_GROUND_FILE_PROCESS_LOG, "main|" + "Uploading segments to blob in process..")
-        upload_video(lec_name, subject_name, lecture_segmentation_folder_path, SEGMENT, lec_id) # UPLOADING VIDEO SEGMENT FILES TO S3 BUCKET
+        upload_video(lec_name, subject_name, lecture_segmentation_folder_path, SEGMENT, lec_id) # UPLOADING VIDEO SEGMENT FILES TO AZURE BLOB
         # blob.upload_video(lecture_segmentation_folder_path, type = SEGMENT) # UPLOADING VIDEO SEGMENT FILES TO S3 BUCKET
 
         EmailService(SUCCESS_EMAIL_BODY, EMAIL_SUBJECT, destination_email_address) # SEND EMAILS

@@ -46,7 +46,7 @@ class Text_preprocess:
             with open(TRANSCRIPT_PATH , "r") as f:
                 self.text = f.read()
         except Exception as e:
-            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
@@ -57,7 +57,7 @@ class Text_preprocess:
     
     def keyword_extraction(self):
         try:
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "keyword_extraction started.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "keyword_extraction|keyword_extraction started.")
             keys = []
             self.rake.extract_keywords_from_text(self.text)
             for rating, keyword in set(self.rake.get_ranked_phrases_with_scores()):
@@ -84,7 +84,7 @@ class Text_preprocess:
             return filePathToKeyWord # SAVED FILE PATH
 
         except Exception as e:
-            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
@@ -95,23 +95,24 @@ class Text_preprocess:
     def train_lda_model(self):
         try:
             corpus, id2word = self.text_normalization() # PREPROCESS TEXT
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization complete for LDA model.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "train_lda_model|text_normalization complete for LDA model.")
             lda_model = LdaMulticore(corpus = corpus,
                                         id2word = id2word,
                                         num_topics = NUMBER_OF_TOPICS, 
+                                        workers= 1,
                                         random_state = RANDOME_STATE,
                                         chunksize = CHUNK_SIZE,
                                         passes = PASSES,
                                         per_word_topics = False) # BUILD LDA MODEL
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "LDA model training finished.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "train_lda_model|LDA model training finished.")
 
             for topic_list in lda_model.print_topics():
                 for topic_word in topic_list:
                     self.lda_topics.append(str(topic_word) + "\n")
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "LDA topics extraction complete.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "train_lda_model|LDA topics extraction complete.")
 
         except Exception as e:
-            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
@@ -121,7 +122,7 @@ class Text_preprocess:
 
     def lda_topic_preprocess(self):
         try:
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "LDA topic preprocess started...")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "lda_topic_preprocess|LDA topic preprocess started...")
             joined_text = " ".join(self.lda_topics)
             lda_topics_list = [joined_text]
             lines = lda_topics_list[0].split("\n")
@@ -145,7 +146,7 @@ class Text_preprocess:
             joined_text.remove('ex') if 'ex' in joined_text else None # IF EX EXSIT IN LIST REMOVE IT FROM LIST
             topic_list = " ".join(joined_text)
 
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Sending preprocessed text to spacy.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "lda_topic_preprocess|Sending preprocessed text to spacy.")
             doc = self.nlp(topic_list)
             removal= ['ADV','PRON','CCONJ','PUNCT','PART','DET','ADP','SPACE', 'NUM', 'SYM']
             self.preprocessed_lda_topcs = [token.lemma_.lower() for token in doc if token.pos_ not in removal and not token.is_stop and token.lemma_.isalpha() == True] # CLEANING NON ALPHABATICAL TEXTS AND PREPROCESS TEXT
@@ -155,11 +156,11 @@ class Text_preprocess:
             file1 = open(filePathToKeyWord, "w")
             file1.write(str(lda_topics))
             file1.close()
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Saved extracted lda topics to file: " + filePathToKeyWord + ".")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Saved extlda_topic_preprocess|racted lda topics to file: " + filePathToKeyWord + ".")
             return filePathToKeyWord
 
         except Exception as e:
-            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,
@@ -169,7 +170,7 @@ class Text_preprocess:
 
     def text_normalization(self):
         try:
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization preprocess started...")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization|text_normalization preprocess started...")
             sentences = sent_tokenize(self.text)
             data_words = list(self.sent_to_words(sentences))
             bigram = Phrases(data_words, min_count = 5, threshold = 100) # BUILD THE BIGRAM. HIGHER THRESHOLD FEWER PHRASES.
@@ -190,11 +191,11 @@ class Text_preprocess:
             id2word = Dictionary(data_lemmatized) # CREATE DICTIONARY
             texts = data_lemmatized # CREATE CORPUS
             corpus = [id2word.doc2bow(text) for text in texts] # TERM DOCUMENT FREQUENCY
-            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "Generating corpus and id2word complete.")
+            self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG, "text_normalization|Generating corpus and id2word complete.")
             return corpus, id2word
 
         except Exception as e:
-            # self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
+            self.debug.error_log(TEXT_PREPROCESS_ERROR_LOG, e, TEXT_PREPROCESS)
             self.debug.debug(TEXT_PREPROCESS, TEXT_PREPROCESS_LOG,e)
             return jsonify({
                 "error": 1,

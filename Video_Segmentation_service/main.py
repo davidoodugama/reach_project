@@ -66,6 +66,9 @@ def token_required(func):
 @application.route('/video/upload_video', methods=['POST'])
 @token_required
 def uploadVideo(current_user_details):
+    # print(current_user_details)
+    if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
     logger = Logger()
     if 'video_file' not in request.files:
         logger.error_log(MAIN_ERROR_LOG, "Upload error.. Empty upload")
@@ -89,8 +92,7 @@ def uploadVideo(current_user_details):
             if format != "mp4":
                 fileFormat = format
             else:
-                fileFormat = False
-
+                fileFormat = "mp4"
             audio_extract_obj = Audio_extractor(lec_name, filename, subject_name, description, user_id, username)
             original_video_file_path, lec_id = audio_extract_obj.storeVideo(video_file)  # STORE VIDEO FILE
             # ON WINDOWS use start /min. On Linux nohup
@@ -119,15 +121,30 @@ def uploadVideo(current_user_details):
 """GET LECTURE TOPICS"""
 @application.route('/video/lectureTopics', methods=['GET'])
 @token_required
-def lectureTopics():
+def lectureTopics(current_user_details):
     try:
-        sql_lecture = "SELECT lecture_name, subject_name, lec_id from Lecture"
-        output_lecture = db.selectOne(sql_lecture)
-        sql_topics = "SELECT lec_id, topic_name, file_url from video_segmentation"
-        output_topic = db.selectOne(sql_lecture)
-        
         lecture_dict = collections.defaultdict(list)
-        topic_dict = collections.defaultdict(list)
+        if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
+        
+        sql_lecture = """SELECT DISTINCT Lecture.lecture_name, Lecture.subject_name, Lecture.lec_id, video_segmentation.lec_id, video_segmentation.topic_name, video_segmentation.file_url 
+                        FROM Lecture
+                        JOIN video_segmentation 
+                        ON Lecture.lec_id = video_segmentation.lec_id"""
+        output_lecture = db.selectOne(sql_lecture)
+        for arr in output_lecture:
+            lecture_dict["data"].append({"topic_name": arr['topic_name'],
+                                              "subject_name": arr['subject_name'],
+                                              "lecture_name": arr['lecture_name'],
+                                              "file_url": arr['file_url']
+                                        })
+        return jsonify({
+            "code": 200,
+            "error": 0,
+            "data": lecture_dict["data"]
+        })
+        # lecture_dict = collections.defaultdict(list)
+        # topic_dict = collections.defaultdict(list)
         # for lecture in output_lecture:
         #     for topic in output_topic:
         #         if topic['lec_id'] == lecture['lec_id']:
@@ -142,30 +159,13 @@ def lectureTopics():
             "code": 500,
             "data": "{0}".format(e)
         })
-# class ConvertToMp4(Resource):
-#     def post(self):
-#         try:
-#             logger = Logger()
-#             req_data = request.get_json()
-#             filename = req_data['filename']
-#             lec_name = req_data['lec_name']
-#             lec_id = req_data['lec_id']
-#             audioE = Audio_extractor(lec_id, lec_name, filename)
-#             out_file_name = audioE.convertVideoToMp4()
-#             return jsonify({
-#                 "error": 0,
-#                 "code": 200,
-#                 "data" : {
-#                 "data": out_file_name,
-#             }})
-#         except Exception as e:
-#             logger.error_log(MAIN_ERROR_LOG, e)
-
 
 @application.route('/email/send', methods=['POST'])
 @token_required
 def sendEmail(current_user_details):
     try:
+        if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
         logger = Logger()
         req = request.get_json()
         message = req['msg']
@@ -179,46 +179,6 @@ def sendEmail(current_user_details):
             "code": 500,
             "data": "{0}".format(e)
         })
-            
-# class CleanAudio(Resource):
-#     def post(self):
-#         try:
-#             logger = Logger()
-#             req_data = request.get_json()
-#             filename = req_data['filename']
-#             lec_name = req_data['lec_name']
-#             lec_id = req_data['lec_id']
-#             audioE = Audio_extractor(lec_id, lec_name, filename)
-#             path = audioE.clean_audio()
-#             rmtree(path)
-#             jsonify(path)
-            
-#         except OSError as e:
-#             logger.error_log(MAIN_ERROR_LOG, "Error: %s - %s." % (e.filename, e.strerror))
-#         except Exception as e:
-#             logger.error_log(MAIN_ERROR_LOG, e)
-
-# class Preprocess_text(Resource):
-#     def post(self):
-#         args = prepro.parse_args()
-#         lec_id = args['lec_id']
-#         lec_name = args['lec_name']
-#         lec_name = lec_name.replace(" ", "_")
-#         preprocess = Text_preprocess(lec_id, lec_name)
-#         preprocess.train_lda_model()
-#         lda_file_path = preprocess.lda_topic_preprocess()
-#         keyword_file_path = preprocess.keyword_extraction()
-#         if keyword_file_path and lda_file_path:
-#             return jsonify({
-#                 "error": 0,
-#                 "data" : {
-#                 "keyword_path": keyword_file_path,
-#                 "lda_file_path": lda_file_path
-#             }})
-#         else:
-#             return jsonify({
-#                 "error": 500,
-#                 "data" : "path not available"})
 
 ###################################################################################### USER COMPOENENT ######################################################################################
 
@@ -249,15 +209,13 @@ WHEN USER IS ACCESSING A SERVICE CHECK FROM THE LOGOUT TABLE WHETHER THAT TOKEN 
 """
 GET ALL USERS. THIS METHOD IS ACCESSIBLE ONLY FOR ADMINS ONLY.
 """
-
-
 @application.route('/user/getAllUsers', methods=['GET'])
 @token_required  # CHECK WHETHER USER IS LOGGED IN OTHERWISE THROW AN ERROR
 def getAllusers(current_user_details):
     try:
         if not current_user_details[0]['role_id'] == 10:
             return "Trespassing web page. This is acessible only to admins."
-        sql = "SELECT id, role_id, username, email, name, contact, verified, time_logged_in, created_user, updated_user, created_date, updated_date FROM User"
+        sql = "SELECT id, role_id, username, email, name, contact, verified, time_logged_in, created_user, updated_user, created_date, updated_date FROM User WHERE verified = 'NO'"
         # db = Azure_Config(DB_NAME)
         response = db.getAll(sql)
         user_details_dict = collections.defaultdict(list)
@@ -290,12 +248,14 @@ def getAllusers(current_user_details):
 
 
 """
-UPDATE VERIFICATION OF REGISTERED USERS
+UPDATE VERIFICATION INFORMATION OF REGISTERED USERS
 """
 @application.route('/user/updateVerification', methods=['POST'])
 @token_required
 def updateVerification(current_user_details):
     try:
+        if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
         req = request.get_json()
         user_id = req['id']
         verified_status = req['verified']
@@ -316,7 +276,7 @@ def updateVerification(current_user_details):
             "code": 500,
             "data": "{0}".format(e)
         })
-
+    
 """
 REGISTER USER. THIS SERVICE IS USED TO REGISTER USERS TO CREATE MY COURCE WEB APPLICATION
 """

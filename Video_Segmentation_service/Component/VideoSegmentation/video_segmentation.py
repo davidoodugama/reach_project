@@ -17,6 +17,7 @@ from Config.Logger.Logger import Logger
 from moviepy.editor import VideoFileClip
 import os
 import ast
+from werkzeug.utils import secure_filename
 from flask import jsonify
 # from Config.S3_Config.S3_Config import S3_Config
 from Const.const import FPS, CHANGED_FPS_VIDEO_SAVING_PATH, VIDEO, VIDEO_SEGMENTATION_LOG, MP4_FORMAT, SEGMENT_FOLDER, VIDEO_SEGMENTATION_ERROR_LOG, CODEC, SEGMENT
@@ -340,11 +341,12 @@ class VideoSegmentation:
                 start_time = i["start_time"] 
                 end_time = i["end_time"]
                 trim_vid = vid.subclip(start_time, end_time)
-                trim_vid.write_videofile(self.lecture_segmentation_folder_path + "/" + i["topic"] + MP4_FORMAT, codec = CODEC) # STORING SEGMENT VIDEOS IN THE PATH
+                trim_vid.write_videofile(self.lecture_segmentation_folder_path + "/" + secure_filename(i["topic"]) + MP4_FORMAT, codec = CODEC) # STORING SEGMENT VIDEOS IN THE PATH
                 self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG,"segment_video| " + self.lecture_segmentation_folder_path + "/" + i["topic"] + MP4_FORMAT + " file saved complete")
                 
             # UPLOAD SEGMENTS TO S3
             # self.s3.upload_video(self.lecture_segmentation_folder_path + "/", SEGMENT)
+            self.debug.debug(VIDEO, VIDEO_SEGMENTATION_LOG,"segment_video| " + "Path for the saved files: " + self.lecture_segmentation_folder_path)
             return self.lecture_segmentation_folder_path, self.remove_segment_folder_path
                 
         except Exception as e:
