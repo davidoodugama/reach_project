@@ -1,0 +1,273 @@
+Welcome to the second lesson of machine learning and optimization with this module. In lesson two, we are going to learn the simplest type of neural network, which is known as perception. First of all, let me summarize the content of the lesson. One in lesson one first we learn south Honda mentors on machine learning, and then we discussed the basic structure of a yeah.
+
+The most important outcome from the previous lesson is this one, the, this fracture of a neuron. If we consider a neural network as a box, without bothering about the internal structure, it was like this, the neural network can get something. This is common to any new Orleans, with
+
+some number of inputs from 0 1, 2 up to in, okay. There can be any number of inputs. And then inside the neural networks, our processing happens and we get an output.
+
+So that is the. Relationship between input and output of a neural network. If we look at the neural network as a black box inside the neural network, there can be any number of neurons depending on the structure of the neural network. So we discussed a few different types of, they will lead towards single layer, neural networks, multilayer neuroleptics.
+
+Yeah. For the time being the most important thing is to understand the function of a single neuron. So look at this diagram here, we have the single neuron.
+
+There are M inputs X, one X, two up to extend my inputs. And each input is multiplied by a weight DISA. WK one up to locate him and inputs multiply by weights are added at the summing junction and another parameter and other value. Nowness bias is also added. If we drive it up, it looks like this, the blue K one X one, plus.
+
+The blue kit, two times six, to add that to that blue K M times X, M plus BK, right. We call this week. So that is the output of the summing junction. We learned that in the first lecture and then. That output goes through that activation function or the transfer function, right? The here, the class of function, the activation function is denoted as fight fight we can input to the function is VK.
+
+And as the output, we get the output right in the last activity, discuss to find. Sigmoidal function and step function. There are other functions that can be used here, not only those two. So we learned this in the first lecture. Please refresh that and try to understand these mathematical notations. Today.
+
+We are going to learn how to train a very simple network to do the practical. As Phil discussed in the first lecture noodle letters can be used for various situations. You'll see various situations solve different types of problems. One common type of problem is a classification problem, right? There are the applications from noodle liters, but for the time being just to understand these things properly, just focused on this problem or next classification.
+
+Probably there are different types of classification problems. Classification problem means
+
+no problem where you have to identify and input in relation to a certain category. Right? So our legal classification problem means identifying to each category. Give an example. If you have some number of inputs, uh, by solving the classification problem, you will pay to label them. The simplest case is blight binary classification.
+
+That is to put things into two sets. For example, uh, if you have a set of diagnostic measurements of a patient, You can classify with it. The patient has the disease or with it, if they said pepper disease, disease, or no disease, that is a classification. And, uh, another example is you can take some parameters from an email and classify whether that email is spam or not spam.
+
+Likewise, there can be various different types of by the classification problems. That example. By considering some values, some parameters, you can take a buying decision, whether to buy a house or not to buy your house, whether to buy a certain stock a little bit there, not to buy that is a binary classification problem.
+
+When you have two classes, in some other cases, there can be multiple classes, one example, at least Harrington character. By leading character by, uh, taking an image of a hand in character, you might want to classify that image into character, whether it is character a or whether it's B, C. And so on another example is face recognition by taking an image of a person.
+
+You may want to classify, or you may want to identify whether that person is David Sunil gamine and so on. So that is a multi-class classification problems. When you have more than one classes, when we do the examples in today's lecture, we'll understand this better. Now. Look at this.
+
+The first laugh. Now, here, there are some values. If you read the x-axis et sexist is systolic blood patient and y-axis gives to portal cholesterol. These are some
+
+off few people. Right. This is a simplified scenario. For example, if we take this data point, what I have marked here, that person has, this is my job, blood pressure, his blood pressure measurement, and this is his total cholesterol limit. Right? So likewise, we have plotted in a scatterplot. Systolic blood pressure versus total cholesterol off some people here, we have 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 people, which are mistaken from 10 people.
+
+If you look at this here, there are two easily identifiable classes in this simplified scenario. Now we, we know. From our general knowledge when systolic blood pressure is high, it's a high risk high-risk situation. And probability of getting a heart disease is high. When the systolic blood pressure is high, similar limit, total cholesterol is high.
+
+Again, probability of getting has diseases high. So therefore we know that people in this area. Have a higher risk of heart failure or the other hand, people in this area have relatively low systolic that patient relatively low cholesterol levels and they have low risk. So we can clearly identifiable two classes in these 10 paper lack incident.
+
+So therefore you feed brewer boundary like this. We can separate. Two pluses. We can separate these people into two classes, right? So if we find the equation of this line, we can use that line or that equation to separate measurements taken from other people into two classes. For example, if you take this measurement from a new person, and if you.
+
+Get this data point, then we can classify that person as a low-risk person. On the other hand, if you get a new data point somewhere here, you can classify it into how it is plus. So here we have two classes. Class one can be called high-risk N C two can be called low.
+
+Right now, this is a binary classification problem. And the two classes can be separated by drawing a light. When we can separate two classes by drawing a line, we call it linear separability. Or we can say that the two
+
+yearly, they're the first two. This. Right by drawing a away. Uh, now let's come to the second diagram. Second graph here. If we look at these two classes, right? Suppose once again, there are two classes. If we want to separate these two classes. Uh, suppose that according to knowledge gained from elsewhere, suppose we have classified this process as high risk patients, high risk people, and the other ones as low risk.
+
+Then we have to separate these two classes in a different way. Still, if we draw a line like.
+
+We can separate the two classes. However, now two separate C1 and C2. It is not possible to draw a line, right? It is not possible to do a straight line instead of that, still it is possible to have a boundary, but that boundary is not. So therefore in this case, in the second case, we say, this is not linearly separable.
+
+Okay. It is not linearly separable. I hope you understand the concept of linear separability. Let's look at a different example in this case. Now we have three.
+
+Here we have portal cholesterol, systolic, bad patient and age. Now we are considering three parameters to separate the two classes. In this case, since we have three variables, we have to draw a 3d graph. Now, when we plot these points in the 3d lab, we get these points. In the 3d space. And if you look at this, you can see it still, it is possible to separate these two, but in this case, we can't draw a line.
+
+We can't separate these two by drawing a line. Instead of that, we can draw a plane like this.
+
+If we draw a plane,
+
+Like this, then we can say to one side of the plane we have C1. And the other side we have C2 still. These two classes are linearly, separable. However, the boundary is a plane, not a lie, not a straight line, but the plane, right. Still, it is linear. Now what happens when we have more than two dimensions.
+
+So when we have two dimensions, the boundary, sorry, there's a mistake here. When the input dimension is three, not two. The boundary becomes a plane. When the input has more than two diamonds, more than three dimensions, the boundary is the hyperplane. We can't do a hyper plane, but you can imagine similar to this.
+
+There is a plane, but in a higher dimensional space, in all these cases, we say the two, plus the cell linearly separable, since they can be separated by drawing a boundary, but when the two classes are very close to each other, like this, then the boundary becomes complicated. It is not linear anymore. So then you need more complicated methods to separate these two.
+
+So that is the idea of linear separability. Now that is the simplest. There is a very simple type of noodle. That is the simplest possible. It is called perceptron perceptron can separate two pluses. If they are linearly, separate. Right. The perception is the simplest form of a noodle. It word used for the classification of patterns, which are linear Alyssa parable.
+
+Now, uh, I have explained this concept in previous slides. If you look at figure eight here plus C one, let's see to our map here. And this is the decision boundary when samples. Uh, in one side of the boundary, we say they belong to plus one, when they are in the other side of the boundary, we say they are in class too.
+
+If you look at figure B still these two classes, separate a, if you want to separate these two classes, you can draw a boundary like this, right? This is the decision, but.
+
+But as you can see, this decision boundary is not alive, right? So therefore, uh, two separate class C one and class C two in the second case, in case B we can't use perceptive, but still you can separate these two by using other methods. We will be using other methods later, but using the perception. This is the simplest form of
+
+You can, uh, classify, you can separate see what Nancy too. Right? So that is very important. And, uh, today we are going to understand how perceptron works. Indeed. Perceptin consist of a single neuron with adjustable synaptic weights and bias. As I mentioned earlier, this algorithm. Uh, it was proposed by a researcher called Rosenblatt and he proved that if two classes are leniently separately, as we explained earlier, then perceptron can separate these two classes.
+
+In other words, given that two classes are linearly separable, it is possible to find weights and the bias for that. Perception today, we are going to learn how these weights and bias can be found.
+
+The, this diagram is very similar to a pistol earlier. This shows the Perceptor the, since we have learned the single learn the structure of the singularly single neuron earlier, this is same as that way. Similar to that here, there are other inputs from X one weeks. The perception can take any number of inputs.
+
+So, you know, the worst thing put, can have any number of dimensions. We know that if it puts out to them, mentions, it is possible to draw these two classes in, in a 2d graph. If there are three inputs, X, one X, two X, three, it is possible to plot these inputs in the 3d graph. Otherwise we can't plot them, but we can imagine.
+
+It in the same way. And each input is multiplied with the weight that blue one, the blue two up to the blue with him, and the bias is added. And the output of the stabbing junction is V which is even by the blue. I excite some from one to M plus B, and this goes to the transfer funds. Fight we is why? Okay.
+
+In this case, the transfer function is a special function called sign functional signal function. The, this is the sign function.
+
+If the input. He's greater than zero. The output of the sign function is plus one, right? If the input is less than zero.
+
+So if the input is less than zero, the. Value of the function output this minus one. If they put the Zillow, then the value is zero. Okay. So this is called the sign function.
+
+Sine function, hor Signum function,
+
+right? The. We have to train this perception, or we have to find that blue one that blue to up to that blue him and buy us so that when an input of class C one is given the output is plus one, when they put belongs to class C one or one of the classes, the output has to be. Plus one. And when they input belongs to C two or the other class output has to be minus one.
+
+Right? If I repeat that, if they input belongs to C1, the output should be plus one, if they put belongs to see to the output should be minus one. Right? So we have to find that blue one up to w M. To make this happen, that that is known as training the perception. So today we are going to learn how this is done.
+
+That is the foundation of any, they will relate to it. If you understand this later, you will understand the functioning of other noodle to assessment.
+
+The, now this is kind of a summary. Of what we discussed earlier in a generalized form, there are two classes. In this case, there are two dimensions. It's one, the next tool, right? When you have two, it says we can put this in the 2d plane. Otherwise we have to use a 3d space. If we have more than three dimensions, we can plot it.
+
+But you already imagine that the principle is this. Uh, this is the decision boundary
+
+to one side of the decision boundary. We have C1 to the other side of the cell. We have C2. And if we look at the situation here, the output of the book is this one.
+
+If this value, Y is greater than zero, we decide that they put belongs to one class. If Y is less than zero, we decide that the input belongs to the other class. That is this decision by. And this vision boundary is given by this equation. The reason is if I write it here, why is so functional? We, we is w I X I hide from one to M.
+
+That is all the weights multiplied by all the inputs. Plus. And this is the sign function,
+
+the sign function besides
+
+this
+
+plus B, if it is greater than zero C. If this is less than zero, this is C two. So therefore the, uh, when this relationship is equal to zero, you get that decision boundary. That's why we have this equation for the lesion probably here. This relationship is from I cause one to him. That is the number of inputs.
+
+When you have just two inputs, this becomes, I equals one to two. The blue one X w w Y X a plus B equals zero. So that means that I believe one X one plus w two X, two plus B equals zero is the decision boundary. And when this is greater than zero, this is class one. When this is less than zero, it belongs to class C two.
+
+That is how the decision is. We need to go through an example. We will understand this in a better way. I hope everything is clear up to this point. Now, here we have summarized everything that we discussed up to this point. If we formulate down how the perception words, it looks like this, we call it perceptive convergence theater input, vector.
+
+Can be written like this X-Wing including the bias. I can explain it here using a simple example. If we consider two inputs, X one and X two, just two inputs and the bias.
+
+This is wheat and that blue one and that blue too. If I don't, we expanded notation. This is B plus that blue one X one, plus that blue two X two
+
+in metrics notation. We can write this. Yes.
+
+B that blue one that live to multiplied by one it's one it's two.
+
+If you have forgotten these metrics operations, this the time to brush up here, previous mathematics. This can be written ness, that blue class force and X.
+
+So this is possible if X equals this one,
+
+this Victor, and if that blue equals this one, Here extend that blue up two with us. And they have three elements, right? X is a three by one. Victor I believe is a three by one winter. And that blue class force is this one. Right? And the C6,
+
+this is not difficult. When you new up your knowledge, it is easy to write like this by putting the bias inside the weight with her. This is easy for mathematical manipulations. That's why, uh, here we have included one here in the weight with right. Sorry. They put Twitter. If they could take the, we have one here.
+
+The bias is not multiplied by an input. Just the biases here, right? This one here is this one, one X one up to here we have in immune boots. In my example that I, uh, short here, we have just two inputs, but it's the same thing. So this is the, the input vector. And this is the way if you have forgotten this Transforce transport, not.
+
+Uh, Victor is normally written like this one X one X two in a vertical way here. If we want to write down X in the input vector, we have divided like this plus one, then X one in up to it's M in vertically. That is how a big. But quite often when we write horizontally, see in cities convenient, right? In a place like this, we use class class post notation, right?
+
+The way this, this one N linear combine output that is V is w Y times excite. As I explained here, it can be written as w w plans force task, task force of the way to. Multiplied by X input, Twitter. That is just the output of the summing junction. Just we, and according to the  that we discussed all of the B when the output of the summing junction is greater than.
+
+We consider that the input Victor belongs to plus C1. Otherwise we consider that the input Witter belongs to class C to the perception. Convergence theory says that given the subset of training vectors that is given some samples from each. You want some samples from C1 and see too, it is possible to find a way to vector w to satisfy these two requirements.
+
+In other words, if you have a sufficient sufficient number of samples from C1 and C2, by using those samples, you can find each of these weights, that blue one that blue to a prudent, bloom, and bias to satisfy.
+
+Big quiet. Right? Once we have found those weights and the bias, when you have a new input, which was not included in the training data set, you can classify it to the right class. That is the idea of the perception and emergency theater. I hope everyone understood that. Let's consider an example here. I have indicated six data points.
+
+Six samples. As you can see in the figure in the graph, three data points belong to one class and the other three data points belong to the other class here. Input size is two in protest, two dimensions you can see in the table. The first three inputs belong to class one. The second three inputs belong to class.
+
+This is C1. This is C2. When an input belongs to class one, the output of the Perceptor should be. Plus one. When they put belongs to class two, the output should be minus one. You feed wrote the person perception. It looks like this, including the bias.
+
+We have to wait and the bias and the output is we, we is
+
+B plus that blue one X one, plus w two.
+
+This is same as B w one W2. This is a task force of the weight Richter and one X, one X two.
+
+And when.
+
+This value is greater than zero. The output
+
+it's plus one, that means
+
+this is the signal function. How close can be. Plus one. For C1 and minus one for C two,
+
+the blue transport six is less than zero output. It's minus one. Now our task is to find that blue one w two and B to make this. As we learned previously, according to the convergence theater of perception, it is possible to find the suitable w the way Twitter to make this happen, to get plus one for one class N minus one for the other class, if the two classes linearly separable.
+
+So let's see how it is that initially. We don't know the rate factor. So therefore
+
+the first step we call it, step zero is to assume that the weight with the, that blue Zido is this here 0% at this zero input  in post. For example, here we Paul, at least zero. The next plan. It's one hands-on we have six inputs, right? Step Zillow. The percents that step hadn't similarly Zillow is plus one.
+
+One one point, but,
+
+and from this we get V equals a blue Transforce X, which is
+
+B w one w two times one. It's one extreme. That means
+
+last one.
+
+So to hear 0, 0, 0 10, we get plus 1, 1, 1 0.5 from this, we get zero as the wedding and. Since we zero, why zero is the signal function, even zero as the input output of the signal function is zero. Now we can clearly see the output of the perception is not that expected, but in this case expected, expected output.
+
+He is plus one, because plus one is the expected output of input exhibit. Since it belongs to class C one expected output this plus one actual output.
+
+It's zero. Now there is here. Using this era, we can adjust the weeds of the neural network.
+
+This is how it it's that they just did.
+
+We call it w one that is.
+
+Of the next step is the blue zero class.
+
+The learning parameter. I will come into that in a little while.
+
+Desired output
+
+minus. The actual output. That is the era times zero. If we put the actual values, that leaves zero is
+
+and these zero is plus one that is the expected output and actual output is zero times. Zero is plus one. And 1.5 and this value called learning parameter.
+
+It's a very small value. For example, it can be 0.1 or 0.01 to adjust the weights, the weights I just based on the era. It is proportional to the era and the input vector. The way I just went depends on the era. This is the era and they put back that given point, but we take on leave the small portion of that to add with a little bit.
+
+With learning parameter is a tuneable parameter, which you can change to get to change the learning rate to, we will learn about these parameters more and more. When we go through this process in other lessons for the time being assume that it's a small value, which is used to take the small portion of the.
+
+And the input vector to change the weight, the weight, they just made these based on these two. If we do this calculation, we get, this is w zero. Plus we get 0.1 0.1 and 0.15. Now that blue one becomes 0.1 0.1 and 0.1.
+
+Now after step zero, we have found a new w but still this w may not be the correct part. Therefore we have to go to the next step, step one and apply the same process again. There are, we have a fine again. You go through the same process. That blue too, and be found it was in that blue one, learning that our meter decided output minus actual output multiplied by it.
+
+One. Now we had to do this for all the samples. We have six samples in this case,
+
+we do this for other examples. And then. Whether we get the right output or the expected output for each and every sound, but right. We call it convergence. We checked with, with the, the perception is canvas. That means whether we get the expected output for each and every sample for all these six samples, we should get the expected.
+
+Value either. Plus one minus one, according to this table, if we get all the values correctly, we can, if this is yes, this, then we can stop doing this. Otherwise we go back and we apply these samples again. And I just wait. And as I explained, Now, when we repeat this process again and again, at a certain point, we will see that the perception is converge.
+
+That means we get the expected value for each and every sample. Now you can do this and you can repeat these steps by yourself. Now I did this using. By writing a simple program and after 13 steps,
+
+for this case after 13 steps, this is the wait with
+
+that means. Now we have this person. 1.8 is the bias and it's swung. It's multiplied by weight minus 0.3. Explorys multiplied by minus 0.5 and we get me. And then when we is applied to the sign function, we get Y for all these cases. For why we get last one for one class and minus one for the other class, N this is the decision boundary.
+
+If you remember, it's one that blue one X one, plus w two X two. B it's the valuable we, if it is greater than zero, we get one class. And if this is less than zero, that is the other class. So therefore, when this is equal to zero, the blue one X one. W two X, two plus B, that is the middle of these two classes.
+
+And that is the boundary.
+
+Okay. So therefore the boundary is given by the seed patient. That means minus 0.3 X one minus 0.5 X two. Plus 1.8 equals zero is the patient of this line. That is the line we found by training the perception. Now I can explain you more about this bias, which I didn't explain earlier since I wanted to wait till this point.
+
+Now you feel, look at this, uh, line. This is the line similar to. Y equals MX plus C, I think you are familiar with this type of grasses in these graphs. This C is the intercept. Similarly, although this is with me in a different format, these 1.8, the percents that intercept of them. We can change the student.
+
+Why? Because they mix plus C for when we change the intercept of a graph that changes
+
+this line like that when the gradient changes, it changes the angle of the light. So they are for the purpose of the bias is basically to shift the decision. It helps you to shift the decision boundary and weights, help you to change that angle of the recent boundary in this case in more sophisticated cases.
+
+Also, we have, we have more than two inputs and we have, we have neural networks is more than one neuron. Still. You have a bias that is to shift the decision boundary with. I used to create the shape of the reshape bone. They contribute towards the shape and the bias contribute to it. Shifting the precision bump.
+
+So both are needed to get the reset boundary right now after the convergence. How do we use this perception after the 10 agents? When you have a new sound? Well, we chose not included in the training data set. Let's say we have a new sub.
+
+Nielsen bird call, uh, say, uh, three, one it's one of these three and X two is one. So that sample is here.
+
+Since we have identified the deficient boundary. Now we can clearly see that sample is in the one side of the division boundary when you apply the sample. So the neural network to the perceptron by giving three as X one, and one as extreme. When you multiply the blue one X one, plus w two X two plus B, you will get the right output to classify that new sample into the right class.
+
+Similarly, if you have a input one and 4.5, that input is clearly in the other side of. The mission boundary. So that input will be classified to the other class. That's how the perception is used to classify
+
+the given sample. Once it is print, now we can understand the person can be used to do a binary classification. In the example that I took, I had only two diamonds. For the convenience, but the same principle applies when you have more dimensions, the only requirement is the two classes must be linearly separable.
+
+If that condition is satisfied, the perceptron can be trained to classify the given input into the right class. Here we have the perceptible convergence algorithm in a complete. For your reference. We have discussed all these steps. I will go through this one here. We have 80% parameters. It's sin. Is that in him by one Victor in Bible implants, one by one input, Victor, because we have inputs.
+
+Plus the bias and weight. Victor is M plus one by one way to actor, we have weights from w one to w M plus the. If we draw it here, we have X one X, two up to X game inputs,
+
+N
+
+the bias 10. This is V hill and this is the sign function. And this is where. Why is that response? Right? The end is the desired response. Learning parameter initialization is set that blues to zero. We set all weight values to zero. That is this one, the blue zero means zero, zero.
+
+One plus him values.
+
+This is plus one times one weight with activation means at times, step in at a given time step, activate the perception by a plane, continuous value input vector. This is what we did in the early example. We give the input. One of the input vectors to, and  output, we calculate the actual response. Why
+
+you should be able to understand this since we discussed the previous example and then
+
+using the difference between the design. Less phones. The N is the desired
+
+decided output. The difference between desired output and the actual output is the era
+
+using that. And the input pick them, the learning parameter, we adjust the weight paper that blue in is the way that the empty input. At that particular time and the new epic tastes the oblivion plus one, and we are decided output can be plus one or minus one, as we discussed. And then we can do this process that is the perception can adjust and go to them until the way it's second wished.
+
+That's what we discussed in the previous. Now, what we discussed is only one approach for this trade. What we did was when we have some samples, in the example, we had six samples and we applied these examples one after the other 1, 2, 3, 4, 5, 6 to the network. And then. We checked with the network is conversed, and then we continue.
+
+And after each sample is applied, we adjust the weight with the weight, which is changed.
+
+He's changed in each of these things. And we repeat that process that is only one approach to train this. However, there are more efficient ways to prevent this in the next list. Listen, we are going to learn that, especially with reference to cost function in today's lesson, we didn't use this word. Plus function.
+
+That is a different concept to make this training process more efficient or more gender. We will learn that in our next lesson,
+
+when we use the cost function, we use the method known as batch percep perception. It is a slight modification of what I discussed today. Please read this what is in this slide and see whether you understand it and come to the next lesson. In our next lab class, we will fight a program to train a perceptron, then try to understand it more.
+
+And in the next lecture, I will explain you how to use a cost function and do the training of the.
+
+If you have any question, please send me an email or send a message to the cost way before. Have a nice day. 
