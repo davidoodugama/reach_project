@@ -29,7 +29,6 @@ try:
     from functools import wraps
     logger = Logger()
     db = Azure_Config(DB_NAME)
-    # from Config.RDS_Config.DB_Config import Rds_Config
 except Exception as e:
     from Config.Logger.Logger import Logger
     logger = Logger()
@@ -53,7 +52,7 @@ def token_required(func):
             return jsonify({'message': 'Token is missing'}), 401
         try:
             data = jwt.decode(token, application.config["SECRET_KEY"], algorithms='HS256')
-            sql = """SELECT id, username, role_id from {} WHERE id = {}""".format(USERTB, data['id'])
+            sql = """SELECT id, username, role_id, email from {} WHERE id = {}""".format(USERTB, data['id'])
             # db = Azure_Config(DB_NAME)
             current_user_details = db.selectOne(sql)
         except Exception as e:
@@ -66,7 +65,6 @@ def token_required(func):
 @application.route('/video/upload_video', methods=['POST'])
 @token_required
 def uploadVideo(current_user_details):
-    # print(current_user_details)
     if not current_user_details[0]['role_id'] == 10:
             return "Trespassing web page. This is acessible only to admins."
     logger = Logger()
@@ -77,11 +75,11 @@ def uploadVideo(current_user_details):
         try:
             video_file = request.files['video_file']
             lec_name = request.form['lec_name']
-            destination_email_address = request.form['email_address']
             subject_name = request.form['subject']
             description = request.form['description']
             user_id = current_user_details[0]['id']
             username = current_user_details[0]['username']
+            destination_email_address = current_user_details[0]['email']
             logger.debug(MAIN, MAIN_LOG, subject_name)
             # lec_id = 1
             # Convert File Name To A Secure File Name
@@ -107,7 +105,7 @@ def uploadVideo(current_user_details):
             print(command)
 
         except Exception as e:
-            # logger.error_log(MAIN_ERROR_LOG, e)
+            logger.error_log(MAIN_ERROR_LOG, e)
             logger.debug(MAIN, MAIN_LOG, e)
             return jsonify({
                 "error": 1,
@@ -123,7 +121,8 @@ def uploadVideo(current_user_details):
 @token_required
 def lectureTopics(current_user_details):
     try:
-        lecture_dict = collections.defaultdict(list)
+        cource_dict = collections.defaultdict(list)
+        subject_dict = collections.defaultdict(list)
         if not current_user_details[0]['role_id'] == 10:
             return "Trespassing web page. This is acessible only to admins."
         
@@ -133,26 +132,19 @@ def lectureTopics(current_user_details):
                         ON Lecture.lec_id = video_segmentation.lec_id"""
         output_lecture = db.selectOne(sql_lecture)
         for arr in output_lecture:
-            lecture_dict["data"].append({"topic_name": arr['topic_name'],
+            cource_dict["data"].append({"topic_name": arr['topic_name'],
                                               "subject_name": arr['subject_name'],
-                                              "lecture_name": arr['lecture_name'],
+                                              "cource_name": arr['lecture_name'],
                                               "file_url": arr['file_url']
                                         })
         return jsonify({
             "code": 200,
             "error": 0,
-            "data": lecture_dict["data"]
+            "data": cource_dict["data"]
         })
-        # lecture_dict = collections.defaultdict(list)
-        # topic_dict = collections.defaultdict(list)
-        # for lecture in output_lecture:
-        #     for topic in output_topic:
-        #         if topic['lec_id'] == lecture['lec_id']:
-        #             # lecture_dict["lecture_name"].append(topic_dict['subject_name'].append({
-        #             #     "topic_name": topic['topic_name']
-        #             #     "file_url": topic['file_url']
-        #             # }))
+        
     except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
         logger.debug(MAIN, MAIN_LOG, e)
         return jsonify({
             "error": 1,
@@ -173,6 +165,7 @@ def sendEmail(current_user_details):
         destination_address = req['destination_address']
         EmailService(message, subject, destination_address)
     except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
         logger.debug(MAIN, MAIN_LOG, e)
         return jsonify({
             "error": 1,
@@ -186,25 +179,25 @@ def sendEmail(current_user_details):
 IF LOGOUT METHOD IS GOING TO BE IMPLEMENTED THEN CREATE A SEPERATE TABLE FOR LOGOUT TOKENS.
 WHEN USER IS ACCESSING A SERVICE CHECK FROM THE LOGOUT TABLE WHETHER THAT TOKEN IS AVAILABLE IN THAT TABLE.
 """
-# @application.route('/logout',methods = ['POST'])
-# def logout():
-#     try:
-#         token = request.headers["x-access-token"]
-#         data = jwt.decode(token, application.config["SECRET_KEY"], algorithms = 'HS256')
-#         data['exp'] = datetime.datetime.utcnow()
-#         return jsonify({
-#                 "error": 0,
-#                 "code": 200,
-#                 "data" : "Logout Successfully"
-#                 })
+@application.route('/logout',methods = ['POST'])
+def logout():
+    try:
+        token = request.headers["x-access-token"]
+        data = jwt.decode(token, application.config["SECRET_KEY"], algorithms = 'HS256')
+        data['exp'] = datetime.datetime.utcnow()
+        return jsonify({
+                "error": 0,
+                "code": 200,
+                "data" : "Logout Successfully"
+                })
 
-#     except Exception as e:
-#         logger.error_log(MAIN_ERROR_LOG, e, MAIN)
-#         return jsonify({
-#             "error": 1,
-#             "code": 500,
-#             "data" : "{0}".format(e)
-#             })
+    except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e, MAIN)
+        return jsonify({
+            "error": 1,
+            "code": 500,
+            "data" : "{0}".format(e)
+            })
 
 """
 GET ALL USERS. THIS METHOD IS ACCESSIBLE ONLY FOR ADMINS ONLY.
@@ -239,6 +232,37 @@ def getAllusers(current_user_details):
         })
 
     except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
+        logger.debug(MAIN, MAIN_LOG, e)
+        return jsonify({
+            "error": 1,
+            "code": 500,
+            "data": "{0}".format(e)
+        })
+
+"""GET TOPICS for EACH LECTURE"""
+@application.route('/user/lectureCourse', methods=['GET'])
+@token_required
+def lectureCourse(current_user_details):
+    try:
+        if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
+        
+        lecturer_id = current_user_details[0]['id']
+        cource_dict = collections.defaultdict(list)
+        sql_lecture = """SELECT subject_name, lecture_name FROM lecture where user_id = {}""".format(lecturer_id)
+        output_lecture = db.selectOne(sql_lecture)
+        for arr in output_lecture:
+            cource_dict[arr['lecture_name']].append({"subject_name": arr['subject_name']})
+            
+        return jsonify({
+            "code": 200,
+            "error": 0,
+            "data": cource_dict
+        })
+        
+    except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
         logger.debug(MAIN, MAIN_LOG, e)
         return jsonify({
             "error": 1,
@@ -270,6 +294,35 @@ def updateVerification(current_user_details):
             "data": "Update Successful"
         })
     except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
+        logger.debug(MAIN, MAIN_LOG, e)
+        return jsonify({
+            "error": 1,
+            "code": 500,
+            "data": "{0}".format(e)
+        })
+        
+        
+"""
+DELETE VERIFICATION INFORMATION OF REGISTERED USERS
+"""
+@application.route('/user/deleteVerification', methods=['POST'])
+@token_required
+def deleteVerification(current_user_details):
+    try:
+        if not current_user_details[0]['role_id'] == 10:
+            return "Trespassing web page. This is acessible only to admins."
+        req = request.get_json()
+        user_id = req['id']
+        sql = "DELETE FROM User WHERE id = {}".format(user_id)
+        db.Update(sql)
+        return jsonify({
+            "code": 200,
+            "error": 0,
+            "data": "Delete Successful"
+        })
+    except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
         logger.debug(MAIN, MAIN_LOG, e)
         return jsonify({
             "error": 1,
@@ -305,6 +358,7 @@ def register():
         })
 
     except Exception as e:
+        logger.error_log(MAIN_ERROR_LOG, e)
         logger.debug(MAIN, MAIN_LOG, e)
         return jsonify({
             "error": 1,
@@ -321,7 +375,6 @@ def login():
         try:
             username = request.form['username']
             password = request.form['password']
-            # db = Azure_Config(DB_NAME)
             user = User(username, password)
             res = user.verify_user()
             if res:
@@ -343,20 +396,13 @@ def login():
                     return make_response("User Not Authenticated", 403, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
         except Exception as e:
+            logger.error_log(MAIN_ERROR_LOG, e)
             logger.debug(MAIN, MAIN_LOG, e)
             return jsonify({
                 "error": 1,
                 "code": 500,
                 "data": "{0}".format(e)
             })
-
-
-# api.add_resource(Login, "/login")
-# api.add_resource(Register, "/register")
-# api.add_resource(Preprocess_text, "/preprocess_text")
-# api.add_resource(Video, "/extract_audio")
-# api.add_resource(ConvertToMp4, "/convertToMp4")
-# api.add_resource(CleanAudio, "/cleanAudio")
 
 if __name__ == "__main__":
     application.run(debug=True)

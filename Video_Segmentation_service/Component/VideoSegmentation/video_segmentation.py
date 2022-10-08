@@ -290,7 +290,7 @@ class VideoSegmentation:
                 Time  = count/self.fps
                 if ret == True:
                     img1 = self.mask(frame)
-                    if not np.any(img2):
+                    if not np.any(img2): # IF 2 WINDOW IS MISSING IN THE STARTUP
                         result = self.reader.readtext(img1)
                         if len(result):
                             name   = self.findName(result)
@@ -300,9 +300,10 @@ class VideoSegmentation:
                     else:
                         pass
                     if img2.size != 0:
-                        res = self.comapre_imgs(img1, img2)
+                        res = self.comapre_imgs(img1, img2) # COMPARE THE 2 WINDOW FRAMES
                         if res:
-                            result = self.reader.readtext(img1)
+                            
+                            result = self.reader.readtext(img1) # READ TEXT IN VIDEO
                             if len(result):
                                 name   = self.findName(result)
                                 self.check_topic(name, Time)
