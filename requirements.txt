@@ -30,9 +30,6 @@ cymem==2.0.6
 Cython==0.29.28
 debugpy==1.6.1
 pip
-pip-upgrader
-upgrade-requirements
-deepspeech
 defusedxml==0.7.1
 docutils==0.16
 easyocr==1.5.0
