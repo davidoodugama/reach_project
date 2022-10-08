@@ -86,7 +86,7 @@ networkx==2.6.3
 nltk==3.7
 noisereduce==2.0.1
 notebook==6.4.12
-numba==0.53.0
+numba
 numexpr==2.8.3
 numpy==1.21.6
 oauthlib==3.2.1
